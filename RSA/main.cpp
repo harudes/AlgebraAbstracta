@@ -114,31 +114,30 @@ public:
     ZZ e;
     ZZ N;
     void Generar_claves(){
-        ZZ p = ga(5,8,3,3);
-        ZZ q = ga(5,8,2,4);
+        ZZ p = ga(30,50,3,3);
+        ZZ q = ga(30,50,2,4);
         while(ProbPrime(p,10)!=1)
         {
-            p = ga(5,8,3,3);
+            p = ga(30,50,3,3);
         }
         while(ProbPrime(q,10)!=1)
         {
-            q = ga(5,8,2,4);
+            q = ga(30,50,2,4);
         }
         N = p * q;
         ZZ phi_N = (p - 1) * (q - 1);
-        e = ga(6,8,5,2);
+        e = ga(30,50,5,4);
         while(e > phi_N || euclides(e, phi_N) != 1)
         {
-            e = ga(6,8,5,2);
+            e = ga(30,50,5,4);
         }
-        cout <<"Clave publica: " << e << endl;
+        cout <<"Clave publica: "<<endl<< e << endl;
         d = modulo(inversoMult(e, phi_N),phi_N);
         cout << "Clave privada: " << d << endl;
-        cout <<"N: " << N << endl;
+        cout <<"N: " <<endl<< N << endl;
         }
     RSA(){
         Generar_claves();
-        cout<<e<<endl;
         alfabeto="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,;";}
     RSA(ZZ publica, ZZ n){alfabeto="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,;";e=publica;N=n;}
     vector<ZZ> encriptar(string mensaje){
@@ -149,6 +148,10 @@ public:
             pos=potenciaMod(pos,e,N);
             message.push_back(pos);
         }
+        cout<<N<<endl;
+        for(int i=0;i<message.size();i++)
+            cout<<message[i]<<",";
+        cout<<endl;
         return message;
     }
     string desencriptar(vector<ZZ> mensaje){
@@ -161,14 +164,14 @@ public:
         }
         return message;
     }
+    void set_d(ZZ ){}
 };
 
 int main(){
     srand(time(NULL));
     RSA receptor;
-    RSA emisor(receptor.e, receptor.N);
-    vector<ZZ> texto = emisor.encriptar("Hola, como estas");
-    string texto2=receptor.desencriptar(texto);
-    cout<<texto2<<endl;
-    return 0;
+    RSA emisor(receptor.e,receptor.N);
+    vector<ZZ> texto=emisor.encriptar("Hola");
+    cout<<receptor.desencriptar(texto)<<endl;
+
 }
