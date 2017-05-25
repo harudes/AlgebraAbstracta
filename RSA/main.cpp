@@ -61,26 +61,26 @@ public:
     string alfabeto;
     ZZ e;
     ZZ N;
-    void Generar_claves(){
-        ZZ P = ga(40,512,15,10);
-        ZZ Q = ga(40,512,13,12);
+    void Generar_claves(int bits){
+        ZZ P = ga(40,(bits/2),15,10);
+        ZZ Q = ga(40,(bits/2),13,12);
         while(ProbPrime(P,10)!=1)
         {
-            P = ga(40,512,15,10);
+            P = ga(40,(bits/2),15,10);
         }
         while(ProbPrime(Q,10)!=1||Q==P)
         {
-            Q = ga(40,512,13,12);
+            Q = ga(40,(bits/2),13,12);
         }
         cout<<"P: "<<P<<endl<<endl<<"Q: "<<Q<<endl<<endl;
         p=P;
         q=Q;
         N = P * Q;
         ZZ phi_N = (P - 1) * (Q - 1);
-        e = ga(30,1024,12,7);
+        e = ga(30,bits,12,7);
         while(e > phi_N || euclides(e, phi_N) != 1)
         {
-            e = ga(30,1024,12,7);
+            e = ga(30,bits,12,7);
         }
         cout <<"Clave publica: "<< e << endl<<endl;
         d = modulo(inversoMult(e, phi_N),phi_N);
@@ -88,8 +88,8 @@ public:
         cout <<"N: " <<N<<endl<<endl;
         }
 
-    RSA(){
-        Generar_claves();
+    RSA(int bitTam){
+        Generar_claves(bitTam);
         alfabeto="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,;#";}
 
     RSA(ZZ publica, ZZ n){alfabeto="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,;#";e=publica;N=n;}
@@ -173,9 +173,10 @@ public:
 
 int main(){
     srand(time(NULL));
-    RSA receptor;
+    RSA receptor(1024);
     RSA emisor(receptor.e,receptor.N);
     string mensaje=emisor.encriptar("Arroz con mango");
     cout<<mensaje<<endl;
-    cout<<receptor.desencriptar(mensaje);
+    cout<<receptor.desencriptar(mensaje)<<endl;
+
 }
