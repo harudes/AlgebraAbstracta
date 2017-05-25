@@ -1,12 +1,16 @@
 # depslib dependency file v1.0
-1493481831 source:c:\users\estilos\desktop\rsa\main.cpp
+1495622572 source:c:\users\estilos\desktop\rsa\main.cpp
 	<iostream>
 	<NTL/ZZ.h>
 	"AriMod.h"
 	<stdlib.h>
 	<time.h>
+	<string.h>
+	<string>
+	<sstream>
+	<math.h>
 
-1493312702 c:\users\estilos\desktop\rsa\include\arimod.h
+1495616297 c:\users\estilos\desktop\rsa\include\arimod.h
 	<vector>
 	<iostream>
 	<NTL/ZZ.h>
@@ -16,10 +20,12 @@
 
 1493266531 c:\users\estilos\desktop\rsa\include\prueba.h
 
-1493447320 source:c:\users\estilos\desktop\rsa\src\arimod.cpp
+1495622412 source:c:\users\estilos\desktop\rsa\src\arimod.cpp
 	"AriMod.h"
 	<vector>
 	<iostream>
 	<NTL/ZZ.h>
 	<stdlib.h>
+	<sstream>
+	<math.h>
 

@@ -3,6 +3,8 @@
 #include <iostream>
 #include <NTL/ZZ.h>
 #include <stdlib.h>
+#include <sstream>
+#include <math.h>
 
 using namespace std;
 using namespace NTL;
@@ -48,6 +50,8 @@ ZZ inversoMult(ZZ a, ZZ m){
 }
 
 ZZ potenciaMod(ZZ n, ZZ m, ZZ mod){
+    if(n>mod)
+        n=modulo(n,mod);
 	ZZ resultado=to_ZZ(1);
 	while(m>0){
 		if(modulo(m,to_ZZ(2))==1)
@@ -117,7 +121,6 @@ ZZ ga(int bits_seed, int bits_num, int particiones, int vueltas)
         s++;
     }
     int elementos_pedazo = bits_num/particiones;
-    int residuo_elementos = bits_num%particiones;
     int indice = 0;
     int cont_particiones = 0;
     while(cont_particiones < particiones - 1)
@@ -141,4 +144,14 @@ ZZ ga(int bits_seed, int bits_num, int particiones, int vueltas)
     ZZ num;
     num = convertir_decimal(a, bits_num);
     return num;
+}
+
+string ZZtoString(ZZ z) {
+    stringstream buffer;
+    buffer << z;
+    return buffer.str();
+}
+ZZ StringtoZZ(string str){
+    ZZ number(INIT_VAL, str.c_str());
+    return number;
 }

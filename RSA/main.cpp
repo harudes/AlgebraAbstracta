@@ -3,6 +3,10 @@
 #include "AriMod.h"
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
+#include <string>
+#include <sstream>
+#include <math.h>
 
 using namespace std;
 using namespace NTL;
@@ -38,140 +42,140 @@ class bbs{
         }
    };
 
-class Cesar{
-    ZZ clave;
-public:
-    string alfabeto;
-    Cesar(ZZ key, string alfabet){clave=key;}
-    Cesar(int key){clave=to_ZZ(key);}
-    string encriptar(string mensaje){
-        int tam = alfabeto.size();
-        for(int i = 0; i <= mensaje.size(); i++)
-            mensaje[i]=alfabeto[to_int(modulo(to_ZZ(alfabeto.find(mensaje[i]))+modulo(clave,to_ZZ(tam)),to_ZZ(tam)))];
-        return mensaje;
-    }
-    string desencriptar(string mensaje){
-        int tam = alfabeto.size();
-        for(int i = 0; i <= mensaje.size(); i++){
-            mensaje[i]=alfabeto[to_int(modulo(to_ZZ(alfabeto.find(mensaje[i]))-modulo(clave,to_ZZ(tam)),to_ZZ(tam)))];
-        }
-        return mensaje;
-    }
-};
-
-class Afin{
-    ZZ A;
-public:
-    ZZ B;
-    string alfabeto;
-    Afin(){
-        alfabeto="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,;";
-        A=ga(5,9,3,2);
-        while(euclides(A,to_ZZ(alfabeto.size()))!=to_ZZ(1))
-            A=ga(5,9,3,2);
-        B=ga(6,9,2,5);
-        cout<<A<<endl;
-    }
-    Afin(int key_A, int key_B){
-        alfabeto="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,;";
-        A=inversoMult(to_ZZ(key_A),to_ZZ(alfabeto.size()));
-        B=to_ZZ(key_B);
-        cout<<A<<endl;
-        }
-    string encriptar(string mensaje){
-        int tam = alfabeto.size();
-        ZZ pos;
-        ZZ A_temp=modulo(A,to_ZZ(tam));
-        ZZ B_temp=modulo(B,to_ZZ(tam));
-        for(int i = 0; i <= mensaje.size(); i++){
-            pos=alfabeto.find(mensaje[i]);
-            pos=modulo(to_ZZ(pos)*A_temp,to_ZZ(tam));
-            pos=modulo(to_ZZ(pos)+B_temp,to_ZZ(tam));
-            mensaje[to_int(pos)]=alfabeto[to_int(pos)];
-        }
-        return mensaje;
-    }
-    string desencriptar(string mensaje){
-        int tam = alfabeto.size();
-        int pos;
-        ZZ A_temp=modulo(A,to_ZZ(tam));
-        ZZ B_temp=modulo(B,to_ZZ(tam));
-        for(int i = 0; i <= mensaje.size(); i++){
-            pos=alfabeto.find(mensaje[i]);
-            pos=to_int(modulo(to_ZZ(pos)-B_temp,to_ZZ(tam)));
-            pos=to_int(modulo(to_ZZ(pos)*A_temp,to_ZZ(tam)));
-            mensaje[i]=alfabeto[pos];
-        }
-        return mensaje;
-    }
-    ZZ get_A(){return A;}
-};
-
 class RSA{
     ZZ d;
+    ZZ p;
+    ZZ q;
+    ZZ resto_chino(ZZ m){
+        ZZ Dp=potenciaMod(modulo(m,p),modulo(d,p-1),p);
+        ZZ Dq=potenciaMod(modulo(m,q),modulo(d,q-1),q);
+        ZZ P=p*q;
+        ZZ P1=q;
+        ZZ P2=p;
+        ZZ q1=inversoMult(P1,p);
+        ZZ q2=inversoMult(P2,q);
+        ZZ D=modulo(modulo(Dp*P1*q1,P)+modulo(Dq*P2*q2,P),P);
+        return D;
+    }
 public:
     string alfabeto;
     ZZ e;
     ZZ N;
     void Generar_claves(){
-        ZZ p = ga(30,50,3,3);
-        ZZ q = ga(30,50,2,4);
-        while(ProbPrime(p,10)!=1)
+        ZZ P = ga(40,512,15,10);
+        ZZ Q = ga(40,512,13,12);
+        while(ProbPrime(P,10)!=1)
         {
-            p = ga(30,50,3,3);
+            P = ga(40,512,15,10);
         }
-        while(ProbPrime(q,10)!=1)
+        while(ProbPrime(Q,10)!=1||Q==P)
         {
-            q = ga(30,50,2,4);
+            Q = ga(40,512,13,12);
         }
-        N = p * q;
-        ZZ phi_N = (p - 1) * (q - 1);
-        e = ga(30,50,5,4);
+        cout<<"P: "<<P<<endl<<endl<<"Q: "<<Q<<endl<<endl;
+        p=P;
+        q=Q;
+        N = P * Q;
+        ZZ phi_N = (P - 1) * (Q - 1);
+        e = ga(30,1024,12,7);
         while(e > phi_N || euclides(e, phi_N) != 1)
         {
-            e = ga(30,50,5,4);
+            e = ga(30,1024,12,7);
         }
-        cout <<"Clave publica: "<<endl<< e << endl;
+        cout <<"Clave publica: "<< e << endl<<endl;
         d = modulo(inversoMult(e, phi_N),phi_N);
         cout << "Clave privada: " << d << endl;
-        cout <<"N: " <<endl<< N << endl;
+        cout <<"N: " <<N<<endl<<endl;
         }
+
     RSA(){
         Generar_claves();
-        alfabeto="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,;";}
-    RSA(ZZ publica, ZZ n){alfabeto="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,;";e=publica;N=n;}
-    vector<ZZ> encriptar(string mensaje){
-        vector<ZZ> message;
-        ZZ pos;
-        for(int i = 0; i <= mensaje.size()-1; i++){
-            pos=to_ZZ(alfabeto.find(mensaje[i]));
-            pos=potenciaMod(pos,e,N);
-            message.push_back(pos);
-        }
-        cout<<N<<endl;
-        for(int i=0;i<message.size();i++)
-            cout<<message[i]<<",";
-        cout<<endl;
-        return message;
-    }
-    string desencriptar(vector<ZZ> mensaje){
+        alfabeto="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,;#";}
+
+    RSA(ZZ publica, ZZ n){alfabeto="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,;#";e=publica;N=n;}
+
+    string encriptar(string mensaje){
         string message;
-        ZZ pos;
-        for(int i = 0; i <= mensaje.size()-1; i++){
-            pos=mensaje[i];
-            pos=potenciaMod(to_ZZ(pos),d,N);
-            message+=alfabeto[to_int(pos)];
+        string temp="";
+        string letra;
+        string aux;
+        ZZ num;
+        int tam = ZZtoString(to_ZZ(alfabeto.length()-1)).length();
+        int tamN= ZZtoString(N).length();
+        for(int i=0;i<mensaje.length();i++){
+                letra=ZZtoString(to_ZZ(alfabeto.find(mensaje[i])));
+                while(letra.length()<tam){
+                    aux=letra;
+                    letra="0";
+                    letra+=aux;
+                }
+                temp+=letra;
+        }
+        while(temp.length()%(tamN-1)!=0){
+                temp+=ZZtoString(to_ZZ(alfabeto.find("#")));
+        }
+        for(int i=0;i<temp.length();i+=tamN-1){
+            letra="";
+            for(int j=0;j<tamN-1;j++){
+                letra+=temp[j+i];
+            }
+            num=potenciaMod(StringtoZZ(letra),e,N);
+            letra=ZZtoString(num);
+            while(letra.length()<tamN){
+                aux=letra;
+                letra="0";
+                letra+=aux;
+            }
+            message+=letra;
         }
         return message;
     }
-    void set_d(ZZ ){}
+    string desencriptar(string mensaje){
+        string message;
+        string letra;
+        string temp;
+        string aux;
+        ZZ num;
+        int tam = ZZtoString(to_ZZ(alfabeto.length()-1)).length();
+        int tamN= ZZtoString(N).length();
+        for(int i=0;i<mensaje.length();i+=tamN){
+            letra="";
+            for(int j=0;j<tamN;j++){
+                letra+=mensaje[j+i];
+            }
+            num=StringtoZZ(letra);
+            letra=ZZtoString(resto_chino(num));
+            while(letra.length()<tamN-1){
+                aux=letra;
+                letra="0";
+                letra+=aux;
+            }
+            temp+=letra;
+        }
+        for(int i=0;i<temp.length();i+=tam){
+            letra="";
+            for(int j=0;j<tam;j++){
+                letra+=temp[j+i];
+            }
+            message+=alfabeto[to_int(StringtoZZ(letra))];
+        }
+        while(message[message.length()-1]=='#'){
+            aux="";
+            for(int i=0;i<message.length()-1;i++)
+                aux+=message[i];
+            message=aux;
+        }
+        return message;
+    }
+
+    void set_d(ZZ){}
 };
 
 int main(){
     srand(time(NULL));
     RSA receptor;
     RSA emisor(receptor.e,receptor.N);
-    vector<ZZ> texto=emisor.encriptar("Hola");
-    cout<<receptor.desencriptar(texto)<<endl;
-
+    string mensaje=emisor.encriptar("Arroz con mango");
+    cout<<mensaje<<endl;
+    cout<<receptor.desencriptar(mensaje);
 }
