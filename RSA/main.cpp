@@ -82,9 +82,7 @@ public:
         {
             e = ga(30,bits,12,7);
         }
-        cout <<"Clave publica: "<< e << endl<<endl;
         d = inversoMult(e, phi_N);
-        cout <<"N: " <<N<<endl<<endl;
         }
 
     RSA(int bitTam){
@@ -177,6 +175,10 @@ int main(){
     int bits=1024;
     cout<<"Cifrador RSA"<<endl;
     RSA receptor(bits);
+    ofstream claves;
+    claves.open("claves.txt");
+    claves<<"e:"<<receptor.e<<endl<<endl<<"N:"<<receptor.N;
+    claves.close();
     int o=1;
     while(o!=0){
         cout<<endl<<"0: Cerrar el programa"<<endl<<"1:Cifrar un mensaje"<<endl<<"2:Descifrar un mensaje"<<endl;
