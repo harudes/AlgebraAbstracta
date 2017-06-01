@@ -11,11 +11,15 @@ ZZ modulo(ZZ a,ZZ b);
 
 ZZ euclides(ZZ a,ZZ b);
 
+ZZ phi(ZZ n);
+
 ZZ inversoMult(ZZ a,ZZ m);
 
 vector<bool> ZZtoBinary(ZZ num);
 
 ZZ potenciaMod(ZZ n,ZZ m,ZZ mod);
+
+bool test_primalidad(ZZ x);
 
 ZZ convertir_decimal(std::vector <bool> a, int bits_num);
 

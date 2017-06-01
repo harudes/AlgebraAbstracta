@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <NTL/ZZ.h>
 #include "AriMod.h"
 #include <stdlib.h>
@@ -72,7 +73,6 @@ public:
         {
             Q = ga(40,(bits/2),13,12);
         }
-        cout<<"P: "<<P<<endl<<endl<<"Q: "<<Q<<endl<<endl;
         p=P;
         q=Q;
         N = P * Q;
@@ -83,16 +83,15 @@ public:
             e = ga(30,bits,12,7);
         }
         cout <<"Clave publica: "<< e << endl<<endl;
-        d = modulo(inversoMult(e, phi_N),phi_N);
-        cout << "Clave privada: " << d << endl;
+        d = inversoMult(e, phi_N);
         cout <<"N: " <<N<<endl<<endl;
         }
 
     RSA(int bitTam){
         Generar_claves(bitTam);
-        alfabeto="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,;#";}
+        alfabeto="abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789.,;:-_()@{}+/";}
 
-    RSA(ZZ publica, ZZ n){alfabeto="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,;#";e=publica;N=n;}
+    RSA(ZZ publica, ZZ n){alfabeto="abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789.,;:-_()@{}+/";e=publica;N=n;}
 
     string encriptar(string mensaje){
         string message;
@@ -107,12 +106,13 @@ public:
                 while(letra.length()<tam){
                     aux=letra;
                     letra="0";
+
                     letra+=aux;
                 }
                 temp+=letra;
         }
         while(temp.length()%(tamN-1)!=0){
-                temp+=ZZtoString(to_ZZ(alfabeto.find("#")));
+                temp+=ZZtoString(to_ZZ(alfabeto.find("w")));
         }
         for(int i=0;i<temp.length();i+=tamN-1){
             letra="";
@@ -159,7 +159,7 @@ public:
             }
             message+=alfabeto[to_int(StringtoZZ(letra))];
         }
-        while(message[message.length()-1]=='#'){
+        while(message[message.length()-1]=='w'){
             aux="";
             for(int i=0;i<message.length()-1;i++)
                 aux+=message[i];
@@ -167,16 +167,44 @@ public:
         }
         return message;
     }
-
-    void set_d(ZZ){}
+    void set_d(ZZ D){d=D;}
+    void set_p(ZZ P){p=P;}
+    void set_q(ZZ Q){q=Q;}
 };
 
 int main(){
     srand(time(NULL));
-    RSA receptor(1024);
-    RSA emisor(receptor.e,receptor.N);
-    string mensaje=emisor.encriptar("Arroz con mango");
-    cout<<mensaje<<endl;
-    cout<<receptor.desencriptar(mensaje)<<endl;
-
+    int bits=1024;
+    cout<<"Cifrador RSA"<<endl;
+    RSA receptor(bits);
+    int o=1;
+    while(o!=0){
+        cout<<endl<<"0: Cerrar el programa"<<endl<<"1:Cifrar un mensaje"<<endl<<"2:Descifrar un mensaje"<<endl;
+        cin>>o;
+        switch(o){
+        case 1:{
+            string a, b;
+            ifstream clave_e, clave_N;
+            clave_e.open("clave e.txt");
+            getline(clave_e,a);
+            clave_N.open("clave N.txt");
+            getline(clave_N,b);
+            RSA emisor(StringtoZZ(a),StringtoZZ(b));
+            string mensaje;
+            cout<<"Escriba el mensaje"<<endl;
+            cin>>mensaje;
+            ofstream ficheroSalida;
+            ficheroSalida.open("mensaje.txt");
+            ficheroSalida<<emisor.encriptar(mensaje);
+            ficheroSalida.close();
+            }
+        case 2:{
+            ifstream entrada;
+            string mess;
+            entrada.open ("recibido.txt");
+            getline(entrada,mess);
+            cout << receptor.desencriptar(mess);
+        }
+        }
+        }
 }

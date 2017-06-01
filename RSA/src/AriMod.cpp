@@ -30,23 +30,42 @@ ZZ euclides(ZZ a, ZZ b){
 	return b;
 }
 
-ZZ inversoMult(ZZ a, ZZ m){
-	ZZ s1=to_ZZ(1), t1=to_ZZ(0), s2=to_ZZ(0), t2=to_ZZ(1),q ,r ,s ,t,temp=m;
-	while(m>0){
-		q=a/m;
-		r=modulo(a,m);
-		a=m;
-		m=r;
-		s=s1-q*s2;
-		s1=s2;
-		s2=s;
-		t=t1-q*t2;
-		t1=t2;
-		t2=t;
-	}
-	if(s1<to_ZZ(0))
-        s1=modulo(s1,temp);
-	return s1;
+
+
+ZZ phi(ZZ n){
+    if(test_primalidad(n))
+        return n-1;
+    ZZ result = n;
+    for (ZZ p=to_ZZ(2); p*p<=n; ++p)
+    {
+        if (modulo(n,p) == to_ZZ(0))
+        {
+            while (modulo(n,p) == to_ZZ(0))
+                n /= p;
+            result -= result / p;
+        }
+    }
+    if (n > to_ZZ(1))
+        result -= result / n;
+    return result;
+};
+
+ZZ inversoMult(ZZ a, ZZ n){
+	ZZ n0 = n, temp, q;
+    ZZ E0 = to_ZZ(0);
+    ZZ E1 = to_ZZ(1);
+    while (a > 1){
+        q = a / n;
+        temp = n;
+        n = modulo(a,n);
+        a = temp;
+        temp = E0;
+        E0 = E1 - q * E0;
+        E1 = temp;
+    }
+    if (E1 < 0)
+        E1 += n0;
+    return E1;
 }
 
 vector<bool> ZZtoBinary(ZZ num){
@@ -59,6 +78,8 @@ vector<bool> ZZtoBinary(ZZ num){
 }
 
 ZZ potenciaMod(ZZ n, ZZ m, ZZ mod){
+    if(m==0)
+        return to_ZZ(1);
     if(n>mod)
         n=modulo(n,mod);
     vector<bool> b=ZZtoBinary(m);
@@ -69,6 +90,14 @@ ZZ potenciaMod(ZZ n, ZZ m, ZZ mod){
             d=modulo(d*n,mod);
 	}
 	return d;
+}
+
+bool test_primalidad(ZZ x){
+    ZZ a = modulo(ga(10,1014,4,8),x-2)+1;
+    if(potenciaMod(a,x-1,x)== 1)
+        return 1;
+    else
+        return 0;
 }
 
 ZZ convertir_decimal(vector <bool> a, int bits_num)
