@@ -30,3 +30,29 @@
 	<sstream>
 	<math.h>
 
+1496327104 source:c:\users\alumno-a\downloads\algebraabstracta-master\rsa\src\arimod.cpp
+	"AriMod.h"
+	<vector>
+	<iostream>
+	<NTL/ZZ.h>
+	<stdlib.h>
+	<sstream>
+	<math.h>
+
+1496327104 c:\users\alumno-a\downloads\algebraabstracta-master\rsa\include\arimod.h
+	<vector>
+	<iostream>
+	<NTL/ZZ.h>
+
+1496341956 source:c:\users\alumno-a\downloads\algebraabstracta-master\rsa\main.cpp
+	<iostream>
+	<fstream>
+	<NTL/ZZ.h>
+	"AriMod.h"
+	<stdlib.h>
+	<time.h>
+	<string.h>
+	<string>
+	<sstream>
+	<math.h>
+

@@ -87,9 +87,9 @@ public:
 
     RSA(int bitTam){
         Generar_claves(bitTam);
-        alfabeto="abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789.,;:-_()@{}+/";}
+        alfabeto="0123456789 abcdefghijklmnopqrstuvwxyz.,ABCDEFGHIJKLMNOPQRSTUVWXYZ";}
 
-    RSA(ZZ publica, ZZ n){alfabeto="abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789.,;:-_()@{}+/";e=publica;N=n;}
+    RSA(ZZ publica, ZZ n){alfabeto="0123456789 abcdefghijklmnopqrstuvwxyz.,ABCDEFGHIJKLMNOPQRSTUVWXYZ";e=publica;N=n;}
 
     string encriptar(string mensaje){
         string message;
@@ -183,8 +183,7 @@ int main(){
     while(o!=0){
         cout<<endl<<"0: Cerrar el programa"<<endl<<"1:Cifrar un mensaje"<<endl<<"2:Descifrar un mensaje"<<endl;
         cin>>o;
-        switch(o){
-        case 1:{
+        if(o==1){
             string a, b;
             ifstream clave_e, clave_N;
             clave_e.open("clave e.txt");
@@ -192,21 +191,22 @@ int main(){
             clave_N.open("clave N.txt");
             getline(clave_N,b);
             RSA emisor(StringtoZZ(a),StringtoZZ(b));
+            ifstream ficheroEntrada;
             string mensaje;
-            cout<<"Escriba el mensaje"<<endl;
-            cin>>mensaje;
+            ficheroEntrada.open ("temp.txt");
+            getline(ficheroEntrada,mensaje);
+            ficheroEntrada.close();
             ofstream ficheroSalida;
             ficheroSalida.open("mensaje.txt");
             ficheroSalida<<emisor.encriptar(mensaje);
             ficheroSalida.close();
             }
-        case 2:{
+        if(o==2){
             ifstream entrada;
             string mess;
             entrada.open ("recibido.txt");
             getline(entrada,mess);
             cout << receptor.desencriptar(mess);
-        }
         }
         }
 }
