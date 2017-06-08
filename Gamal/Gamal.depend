@@ -1,0 +1,27 @@
+# depslib dependency file v1.0
+1496948365 source:c:\users\estilos\desktop\gamal\src\arimod.cpp
+	"AriMod.h"
+	<vector>
+	<iostream>
+	<NTL/ZZ.h>
+	<stdlib.h>
+	<sstream>
+	<math.h>
+
+1496889923 c:\users\estilos\desktop\gamal\include\arimod.h
+	<vector>
+	<iostream>
+	<NTL/ZZ.h>
+
+1496948503 source:c:\users\estilos\desktop\gamal\main.cpp
+	<iostream>
+	<fstream>
+	<NTL/ZZ.h>
+	"AriMod.h"
+	<stdlib.h>
+	<time.h>
+	<string.h>
+	<string>
+	<sstream>
+	<math.h>
+
