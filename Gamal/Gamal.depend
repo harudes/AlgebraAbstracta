@@ -25,3 +25,29 @@
 	<sstream>
 	<math.h>
 
+1497551408 source:c:\users\alumno-a\desktop\gamal\main.cpp
+	<iostream>
+	<fstream>
+	<NTL/ZZ.h>
+	"AriMod.h"
+	<stdlib.h>
+	<time.h>
+	<string.h>
+	<string>
+	<sstream>
+	<math.h>
+
+1497497782 c:\users\alumno-a\desktop\gamal\include\arimod.h
+	<vector>
+	<iostream>
+	<NTL/ZZ.h>
+
+1497497782 source:c:\users\alumno-a\desktop\gamal\src\arimod.cpp
+	"AriMod.h"
+	<vector>
+	<iostream>
+	<NTL/ZZ.h>
+	<stdlib.h>
+	<sstream>
+	<math.h>
+

@@ -31,14 +31,14 @@ public:
     Gamal(int Bits){
         bits = Bits;
         generar_claves_receptor();
-        alfabeto="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,;";
+        alfabeto="0123456789 abcdefghijklmnopqrstuvwxyz.,ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     }
     Gamal(ZZ E1,ZZ E2,ZZ P,int Bits){
         e1=E1;
         e2=E2;
         p=P;
         bits = Bits;
-        alfabeto="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,;";
+        alfabeto="0123456789 abcdefghijklmnopqrstuvwxyz.,ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     }
     string encriptar(string mensaje){
         ZZ r=modulo(ga(30,bits,9,8),p-to_ZZ(5))+to_ZZ(3);
@@ -94,9 +94,6 @@ public:
         ZZ c1=StringtoZZ(mensaje.substr(0,tamN));
         ZZ KM=potenciaMod(c1,d,p);
         mensaje=mensaje.substr(tamN,mensaje.length()-tamN);
-        cout<<KM<<endl;
-        cout<<p<<endl;
-        cout<<inversoMult(KM,p)<<endl;
         for(int i=0;i<mensaje.length();i+=tamN){
             letra="";
             for(int j=0;j<tamN;j++){
@@ -130,13 +127,45 @@ public:
     }
 
 };
-
-int main()
-{
+int main(){
     srand(time(NULL));
-    Gamal receptor(1024);
-    Gamal emisor(receptor.e1,receptor.e2,receptor.p,1024);
-    string mensaje=emisor.encriptar("I have made over one thousand blades. But, yet, those hands will never hold anything. So, as I pray, Unlimited Blade Works. Luis Francisco Rendon Zuniga");
-    cout<<receptor.desencriptar(mensaje);
-    return 0;
+    int bits=1024;
+    cout<<"Cifrador RSA"<<endl;
+    Gamal receptor(bits);
+    ofstream claves;
+    claves.open("claves.txt");
+    claves<<"e1:"<<receptor.e1<<endl<<endl<<"e2:"<<receptor.e2<<endl<<endl<<"p:"<<receptor.p;
+    claves.close();
+    int o=1;
+    while(o!=0){
+        cout<<endl<<"0: Cerrar el programa"<<endl<<"1:Cifrar un mensaje"<<endl<<"2:Descifrar un mensaje"<<endl;
+        cin>>o;
+        if(o==1){
+            string a, b, c;
+            ifstream clave_e1, clave_e2, clave_p;
+            clave_e1.open("clave e1.txt");
+            getline(clave_e1,a);
+            clave_e2.open("clave e2.txt");
+            getline(clave_e2,b);
+            clave_p.open("clave p.txt");
+            getline(clave_p,c);
+            Gamal emisor(StringtoZZ(a),StringtoZZ(b),StringtoZZ(c),bits);
+            ifstream ficheroEntrada;
+            string mensaje;
+            ficheroEntrada.open ("temp.txt");
+            getline(ficheroEntrada,mensaje);
+            ficheroEntrada.close();
+            ofstream ficheroSalida;
+            ficheroSalida.open("mensaje.txt");
+            ficheroSalida<<emisor.encriptar(mensaje);
+            ficheroSalida.close();
+            }
+        if(o==2){
+            ifstream entrada;
+            string mess;
+            entrada.open ("recibido.txt");
+            getline(entrada,mess);
+            cout << receptor.desencriptar(mess);
+        }
+        }
 }

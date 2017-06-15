@@ -196,8 +196,8 @@ ZZ StringtoZZ(string str){
 }
 
 ZZ find_root(ZZ p){
-    ZZ q=(p-to_ZZ(1))/to_ZZ(2),g=to_ZZ(2);
-    for(;g<p-1;g++){
+    ZZ q=(p-to_ZZ(1))/to_ZZ(2),g=p-to_ZZ(1);
+    for(;g>to_ZZ(2);g--){
         if((potenciaMod(g,to_ZZ(2),p)!=to_ZZ(1))&&(potenciaMod(g,q,p)!=to_ZZ(1)))
             return g;
     }
