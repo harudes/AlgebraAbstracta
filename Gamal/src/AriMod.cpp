@@ -180,6 +180,7 @@ ZZ ga(int bits_seed, int bits_num, int particiones, int vueltas)
         rotar_derecha(a, indice, bits_num - ((particiones - 1) * elementos_pedazo), vueltas);
 
     ZZ num;
+    a[bits_num-1]=1;
     num = convertir_decimal(a, bits_num);
     return num;
 }

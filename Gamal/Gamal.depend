@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1496948365 source:c:\users\estilos\desktop\gamal\src\arimod.cpp
+1497502635 source:c:\users\estilos\desktop\gamal\src\arimod.cpp
 	"AriMod.h"
 	<vector>
 	<iostream>
@@ -13,7 +13,7 @@
 	<iostream>
 	<NTL/ZZ.h>
 
-1496948503 source:c:\users\estilos\desktop\gamal\main.cpp
+1497502575 source:c:\users\estilos\desktop\gamal\main.cpp
 	<iostream>
 	<fstream>
 	<NTL/ZZ.h>

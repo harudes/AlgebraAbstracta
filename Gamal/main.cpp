@@ -13,36 +13,37 @@ using namespace std;
 
 class Gamal{
     ZZ d;
-    ZZ Km;
+    int bits;
     string alfabeto;
-    void generar_claves_receptor(int bits){
+    void generar_claves_receptor(){
         p=ga(30,bits,8,10);
+        while(ProbPrime(p,10)!=1)
+            p=ga(30,bits,8,10);
         e1=find_root(p);
         d=modulo(ga(30,bits,9,8),p-to_ZZ(5))+to_ZZ(3);
         e2=potenciaMod(e1,d,p);
     }
-    void generar_claves_emisor(int bits){
-        ZZ r=modulo(ga(30,bits,9,8),p-to_ZZ(5))+to_ZZ(3);
-        c1=potenciaMod(e1,r,p);
-        Km=potenciaMod(e2,r,p);
-    }
+
 public:
     ZZ e1;
     ZZ e2;
     ZZ p;
-    ZZ c1;
-    Gamal(int bits){
-        generar_claves_receptor(bits);
+    Gamal(int Bits){
+        bits = Bits;
+        generar_claves_receptor();
         alfabeto="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,;";
     }
-    Gamal(ZZ E1,ZZ E2,ZZ P,int bits){
+    Gamal(ZZ E1,ZZ E2,ZZ P,int Bits){
         e1=E1;
         e2=E2;
         p=P;
-        generar_claves_emisor(bits);
+        bits = Bits;
         alfabeto="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,;";
     }
     string encriptar(string mensaje){
+        ZZ r=modulo(ga(30,bits,9,8),p-to_ZZ(5))+to_ZZ(3);
+        ZZ c1=potenciaMod(e1,r,p);
+        ZZ Km=potenciaMod(e2,r,p);
         string message;
         string temp="";
         string letra;
@@ -77,20 +78,25 @@ public:
             }
             message+=letra;
         }
-        return message;
+        string c(tamN-ZZtoString(c1).length(),'0');
+        c+=ZZtoString(c1);
+        c+=message;
+        return c;
     }
-    string desencriptar(ZZ C1, string mensaje){
+    string desencriptar(string mensaje){
         string message;
         string letra;
         string temp;
         string aux;
+        int tam = ZZtoString(to_ZZ(alfabeto.length()-1)).length();
+        int tamN= ZZtoString(p).length();
         ZZ num;
-        ZZ KM=potenciaMod(C1,d,p);
+        ZZ c1=StringtoZZ(mensaje.substr(0,tamN));
+        ZZ KM=potenciaMod(c1,d,p);
+        mensaje=mensaje.substr(tamN,mensaje.length()-tamN);
         cout<<KM<<endl;
         cout<<p<<endl;
         cout<<inversoMult(KM,p)<<endl;
-        int tam = ZZtoString(to_ZZ(alfabeto.length()-1)).length();
-        int tamN= ZZtoString(p).length();
         for(int i=0;i<mensaje.length();i+=tamN){
             letra="";
             for(int j=0;j<tamN;j++){
@@ -100,7 +106,6 @@ public:
             //cout<<letra<<endl;
             //cout<<KM<<endl<<p<<endl<<inversoMult(KM,p)<<endl;
             letra=ZZtoString(modulo(num*inversoMult(KM,p),p));
-            cout<<"Se desencripto una letra"<<endl;
             while(letra.length()<tamN-1){
                 aux=letra;
                 letra="0";
@@ -131,7 +136,7 @@ int main()
     srand(time(NULL));
     Gamal receptor(1024);
     Gamal emisor(receptor.e1,receptor.e2,receptor.p,1024);
-    string mensaje=emisor.encriptar("I have made over one thousand blades. But, jet, those hands will never hold anything. So, as I pray, Unlimited Blade Works.luis.rendon.ucsp.edu.pe. Me gusta el arroz con mango akasdjkasjdklasjdlasjdlksajdklaldjdlkajdlajdaksldjlasjdlkasjdlksajdklasjdslkajdlksajdlkajdlksajdlaslkdsakldlsakjdlasjldkasdalskjdakldja");
-    cout<<receptor.desencriptar(emisor.c1,mensaje);
+    string mensaje=emisor.encriptar("I have made over one thousand blades. But, yet, those hands will never hold anything. So, as I pray, Unlimited Blade Works. Luis Francisco Rendon Zuniga");
+    cout<<receptor.desencriptar(mensaje);
     return 0;
 }
