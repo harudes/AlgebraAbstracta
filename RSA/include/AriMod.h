@@ -27,6 +27,10 @@ void rotar_derecha(vector <bool> &vec, int indice, int elementos, int vueltas);
 
 void rotar_izquierda(vector <bool> &vec, int indice, int elementos, int vueltas);
 
+ZZ DES(int bits);
+
+vector<bool> PC_1(vector<bool> num);
+
 ZZ ga(int bits_seed, int bits_num, int particiones, int vueltas);
 
 string ZZtoString(ZZ z);

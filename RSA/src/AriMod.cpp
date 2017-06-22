@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <sstream>
 #include <math.h>
+#include <bitset>
 
 using namespace std;
 using namespace NTL;
@@ -100,19 +101,17 @@ bool test_primalidad(ZZ x){
         return 0;
 }
 
-ZZ convertir_decimal(vector <bool> a, int bits_num)
+ZZ convertir_decimal(vector <bool> a)
 {
     ZZ num;
     num = 0;
     int e = 0;
-    for(int i = bits_num - 1; i >= 0; i--)
+    for(int i = a.size() - 1; i >= 0; i--)
     {
         if(a[i]==1)
         {
             num += power2_ZZ(e);
         }
-        else
-            num += to_ZZ(0);
         e += 1;
     }
     return num;
@@ -140,6 +139,75 @@ void rotar_izquierda(vector <bool> &vec, int indice, int elementos, int vueltas)
             vec[i + 1] = temp;
         }
     }
+}
+vector<bool> PC_1(vector<bool> num){
+    vector<bool> num2;
+    for(int i=0;i<num.size();i+=64){
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+48]);
+        num2.push_back(num[i+40]);
+        num2.push_back(num[i+32]);
+        num2.push_back(num[i+24]);
+        num2.push_back(num[i+16]);
+        num2.push_back(num[i+8]);
+        num2.push_back(num[i+0]);
+        num2.push_back(num[i+57]);
+        num2.push_back(num[i+49]);
+        num2.push_back(num[i+41]);
+        num2.push_back(num[i+33]);
+        num2.push_back(num[i+25]);
+        num2.push_back(num[i+17]);
+        num2.push_back(num[i+9]);
+        num2.push_back(num[i+1]);
+        num2.push_back(num[i+58]);
+        num2.push_back(num[i+50]);
+        num2.push_back(num[i+42]);
+        num2.push_back(num[i+34]);
+        num2.push_back(num[i+26]);
+        num2.push_back(num[i+18]);
+        num2.push_back(num[i+10]);
+        num2.push_back(num[i+2]);
+        num2.push_back(num[i+]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+        num2.push_back(num[i+56]);
+    }
+}
+ZZ DES(int bits){
+    vector<bool> num,num2,num3;
+    for(int i=0; i<bits;i++)
+        num.push_back(1);
+    for(int i=0; i<bits; i++)
+        num[i]=rand()%2;
+    num2=PC_1(num);
 }
 ZZ ga(int bits_seed, int bits_num, int particiones, int vueltas)
 {
@@ -180,7 +248,8 @@ ZZ ga(int bits_seed, int bits_num, int particiones, int vueltas)
         rotar_derecha(a, indice, bits_num - ((particiones - 1) * elementos_pedazo), vueltas);
 
     ZZ num;
-    num = convertir_decimal(a, bits_num);
+    a[bits_num-1]=1;
+    num = convertir_decimal(a);
     return num;
 }
 
