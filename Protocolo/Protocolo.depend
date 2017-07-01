@@ -1,0 +1,28 @@
+# depslib dependency file v1.0
+1498892456 source:c:\users\estilos\desktop\protocolo\src\arimod.cpp
+	"AriMod.h"
+	<vector>
+	<iostream>
+	<NTL/ZZ.h>
+	<stdlib.h>
+	<sstream>
+	<math.h>
+	<bitset>
+
+1498892456 c:\users\estilos\desktop\protocolo\include\arimod.h
+	<vector>
+	<iostream>
+	<NTL/ZZ.h>
+
+1498905741 source:c:\users\estilos\desktop\protocolo\main.cpp
+	<iostream>
+	<fstream>
+	<NTL/ZZ.h>
+	"AriMod.h"
+	<stdlib.h>
+	<time.h>
+	<string.h>
+	<sstream>
+	<math.h>
+	<windows.h>
+
